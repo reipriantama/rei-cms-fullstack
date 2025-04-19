@@ -7,8 +7,9 @@ import { revalidatePath } from "next/cache";
 import postgres from "postgres";
 import { redirect } from "next/navigation";
 
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
+const sql = postgres<{}>(process.env.POSTGRES_URL!, { ssl: "require" });
 
+/* ========== AUTH ========== */
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData
@@ -28,6 +29,7 @@ export async function authenticate(
   }
 }
 
+/* ========== INVOICE ACTIONS ========== */
 export type State = {
   errors?: {
     customerId?: string[];
@@ -54,14 +56,12 @@ const FormSchema = z.object({
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 
 export async function createInvoice(prevState: State, formData: FormData) {
-  // Validate form using Zod
   const validatedFields = CreateInvoice.safeParse({
     customerId: formData.get("customerId"),
     amount: formData.get("amount"),
     status: formData.get("status"),
   });
 
-  // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
@@ -69,25 +69,21 @@ export async function createInvoice(prevState: State, formData: FormData) {
     };
   }
 
-  // Prepare data for insertion into the database
   const { customerId, amount, status } = validatedFields.data;
   const amountInCents = amount * 100;
   const date = new Date().toISOString().split("T")[0];
 
-  // Insert data into the database
   try {
     await sql`
       INSERT INTO invoices (customer_id, amount, status, date)
       VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
     `;
   } catch (error) {
-    // If a database error occurs, return a more specific error.
     return {
       message: "Database Error: Failed to Create Invoice.",
     };
   }
 
-  // Revalidate the cache for the invoices page and redirect the user.
   revalidatePath("/dashboard/invoices");
   redirect("/dashboard/invoices");
 }
@@ -132,4 +128,106 @@ export async function updateInvoice(
 export async function deleteInvoice(id: string) {
   await sql`DELETE FROM invoices WHERE id = ${id}`;
   revalidatePath("/dashboard/invoices");
+}
+
+/* ========== PRODUCT ACTIONS ========== */
+
+const CreateProductSchema = z.object({
+  name: z.string().min(1, "Nama produk wajib diisi."),
+  description: z.string().optional(),
+  price: z.coerce.number().min(1, "Harga harus lebih dari 0."),
+  stock: z.coerce.number().min(0, "Stok tidak boleh negatif."),
+  image_url: z.string().url().optional().or(z.literal("")),
+});
+
+export type ProductFormState = {
+  errors?: {
+    name?: string[];
+    description?: string[];
+    price?: string[];
+    stock?: string[];
+    image_url?: string[];
+  };
+  message?: string | null;
+};
+
+export async function createProduct(formData: FormData): Promise<void> {
+  const validatedFields = CreateProductSchema.safeParse({
+    name: formData.get("name"),
+    description: formData.get("description"),
+    price: formData.get("price"),
+    stock: formData.get("stock"),
+    image_url: formData.get("image_url"),
+  });
+
+  if (!validatedFields.success) {
+    console.error(
+      "Validation error:",
+      validatedFields.error.flatten().fieldErrors
+    );
+    return;
+  }
+
+  const { name, description, price, stock, image_url } = validatedFields.data;
+
+  try {
+    await sql`
+      INSERT INTO products (name, description, price, stock, image_url)
+      VALUES (${name}, ${description || null}, ${price}, ${stock}, ${
+      image_url || null
+    })
+    `;
+  } catch (error) {
+    console.error("Database error:", error);
+    return;
+  }
+
+  revalidatePath("/dashboard/products");
+  redirect("/dashboard/products");
+}
+
+export async function updateProduct(formData: FormData): Promise<void> {
+  const id = formData.get("id") as string;
+
+  const validatedFields = CreateProductSchema.safeParse({
+    name: formData.get("name"),
+    description: formData.get("description"),
+    price: formData.get("price"),
+    stock: formData.get("stock"),
+    image_url: formData.get("image_url"),
+  });
+
+  if (!validatedFields.success) {
+    console.error(
+      "Validation error:",
+      validatedFields.error.flatten().fieldErrors
+    );
+    return;
+  }
+
+  const { name, description, price, stock, image_url } = validatedFields.data;
+
+  try {
+    await sql`
+      UPDATE products
+      SET name = ${name},
+          description = ${description || null},
+          price = ${price},
+          stock = ${stock},
+          image_url = ${image_url || null}
+      WHERE id = ${id}
+    `;
+  } catch (error) {
+    console.error("Database error:", error);
+    return;
+  }
+
+  revalidatePath("/dashboard/products");
+  redirect("/dashboard/products");
+}
+
+export async function deleteProduct(id: string) {
+  await sql`DELETE FROM products WHERE id = ${id}`;
+  revalidatePath("/dashboard/products");
+  redirect("/dashboard/products");
 }
