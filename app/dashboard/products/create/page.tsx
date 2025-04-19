@@ -1,8 +1,19 @@
 import { createProduct } from "@/app/lib/actions";
+import Breadcrumbs from "@/app/ui/breadcrumbs";
 
 export default function AddProductPage() {
   return (
-    <div className="max-w-xl p-6 mx-auto">
+    <div className="w-full p-6 mx-auto">
+      <Breadcrumbs
+        breadcrumbs={[
+          { label: "Products", href: "/dashboard/products" },
+          {
+            label: "Create Product",
+            href: "/dashboard/products/create",
+            active: true,
+          },
+        ]}
+      />
       <h1 className="text-2xl font-semibold mb-4">Tambah Produk</h1>
       <form action={createProduct} className="space-y-4">
         <input

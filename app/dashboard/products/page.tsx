@@ -1,16 +1,15 @@
 import { getAllProducts, getProductCount } from "@/app/query/products";
-import Pagination from "@/app/ui/invoices/pagination";
+import Pagination from "@/app/ui/pagination";
 import { DeleteProduct, EditProduct } from "@/app/ui/products/buttonProduct";
 import Search from "@/app/ui/search";
 import Link from "next/link";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: { query?: string; page?: string };
-}) {
-  const currentPage = Number(searchParams?.page || "1");
-  const query = searchParams?.query || "";
+export default async function Page() {
+  const queryString = new URLSearchParams(
+    `${process.env.NEXT_QUERY_PARAMS || ""}`
+  );
+  const query = queryString.get("query") || "";
+  const currentPage = Number(queryString.get("page") || "1");
 
   const ITEMS_PER_PAGE = 5;
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -19,7 +18,7 @@ export default async function Page({
   const totalProducts = await getProductCount(query);
   const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
   return (
-    <div className="mt-10">
+    <div>
       <div className="w-full flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Daftar Produk</h2>
         <Link

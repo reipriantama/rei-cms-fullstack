@@ -1,5 +1,6 @@
 import { getProductById } from "@/app/query/products";
 import { updateProduct } from "@/app/lib/actions";
+import Breadcrumbs from "@/app/ui/breadcrumbs";
 
 export default async function EditProductPage({
   params,
@@ -9,10 +10,20 @@ export default async function EditProductPage({
   const product = await getProductById(params.id);
 
   return (
-    <div className="max-w-xl p-6 mx-auto">
+    <div className="w-full p-6 mx-auto">
+      <Breadcrumbs
+        breadcrumbs={[
+          { label: "Products", href: "/dashboard/products" },
+          {
+            label: "Edit Product",
+            href: `/dashboard/products/${product.id}`,
+            active: true,
+          },
+        ]}
+      />
       <h1 className="text-2xl font-semibold mb-4">Edit Produk</h1>
       <form action={updateProduct} className="space-y-4">
-        <input type="hidden" name="id" value={product.id} /> {/* 👈 penting */}
+        <input type="hidden" name="id" value={product.id} />
         <input
           defaultValue={product.name}
           name="name"
