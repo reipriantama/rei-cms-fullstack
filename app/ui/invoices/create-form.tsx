@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { CustomerField } from "@/app/lib/definitions";
+import { CustomerField } from "@/app/db/definitions";
 import Link from "next/link";
 import {
   CheckIcon,

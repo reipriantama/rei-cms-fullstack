@@ -7,10 +7,12 @@ import {
   fetchRevenue,
   fetchCardData,
 } from "@/app/lib/data";
+import { getAllProducts } from "../query/products";
 
 export default async function Page() {
   const revenue = await fetchRevenue();
   const latestInvoices = await fetchLatestInvoices();
+  const products = await getAllProducts();
   const {
     numberOfInvoices,
     numberOfCustomers,
@@ -36,6 +38,41 @@ export default async function Page() {
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
         <RevenueChart revenue={revenue} />
         <LatestInvoices latestInvoices={latestInvoices} />
+      </div>
+
+      {/* 👇 Tambahan Section Produk */}
+      <div className="mt-10">
+        <h2 className="text-lg font-semibold mb-4">Daftar Produk</h2>
+        <div className="overflow-x-auto border rounded-md">
+          <table className="w-full min-w-[600px] text-sm">
+            <thead className="bg-gray-100 text-left">
+              <tr>
+                <th className="p-2 border-b">Nama</th>
+                <th className="p-2 border-b">Harga</th>
+                <th className="p-2 border-b">Stok</th>
+                <th className="p-2 border-b">Gambar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((product) => (
+                <tr key={product.id} className="hover:bg-gray-50">
+                  <td className="p-2 border-b">{product.name}</td>
+                  <td className="p-2 border-b">
+                    Rp {product.price.toLocaleString()}
+                  </td>
+                  <td className="p-2 border-b">{product.stock}</td>
+                  <td className="p-2 border-b">
+                    <img
+                      src={product.image_url}
+                      alt={product.name}
+                      className="h-12 w-20 object-cover rounded"
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </main>
   );
