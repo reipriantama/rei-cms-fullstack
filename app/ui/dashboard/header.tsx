@@ -1,48 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
-// Contoh: detect UUID atau angka (bisa kamu sesuaikan nanti)
-function isDynamicSegment(segment: string) {
+// Deteksi UUID atau ID string panjang
+function isIdSegment(segment: string) {
   return (
     /^[0-9a-f]{8}-[0-9a-f]{4}/.test(segment) ||
-    /^[a-zA-Z0-9]{6,}$/.test(segment)
+    /^[a-zA-Z0-9]{10,}$/.test(segment)
   );
 }
 
 export default function DashboardHeader() {
   const pathname = usePathname();
-  const [today, setToday] = useState("");
-
-  useEffect(() => {
-    const now = new Date();
-    const formatted = now.toLocaleDateString("id-ID", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    setToday(formatted);
-  }, []);
 
   const getTitleFromPath = () => {
-    const segments = pathname.split("/").filter(Boolean).slice(1); // skip "dashboard"
+    const segments = pathname.split("/").filter(Boolean);
 
-    // Filter out ID segment (UUID or slug)
-    const filtered = segments.filter((seg) => !isDynamicSegment(seg));
+    if (segments.length <= 1) return "Dashboard";
 
-    // Gabungkan dan kapitalisasi
-    if (filtered.length === 0) return "Dashboard";
+    const last = segments[segments.length - 1];
+    const secondLast = segments[segments.length - 2];
 
-    return filtered
-      .map((segment) =>
-        segment
-          .replace(/-/g, " ")
-          .replace(/\b\w/g, (char) => char.toUpperCase())
-      )
-      .join(" / ");
+    if (isIdSegment(last)) return capitalize(secondLast);
+
+    if (last === "create") return `Create ${capitalize(secondLast)}`;
+    if (last === "edit") return `Edit ${capitalize(secondLast)}`;
+
+    return capitalize(last);
   };
+
+  const capitalize = (text: string) =>
+    text.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
 
   return (
     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-md">
