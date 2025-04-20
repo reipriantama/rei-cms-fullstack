@@ -10,14 +10,34 @@ export type Product = {
   created_at: string;
 };
 
-export async function getAllProducts(query = "", offset = 0, limit = 5) {
+export async function getAllProducts(
+  query = "",
+  offset = 0,
+  limit: number | null = 5
+) {
   if (query) {
+    if (limit === null) {
+      return await sql`
+        SELECT * FROM products
+        WHERE LOWER(name) LIKE ${"%" + query.toLowerCase() + "%"}
+        ORDER BY name ASC
+        OFFSET ${offset}
+      `;
+    }
     return await sql`
       SELECT * FROM products
       WHERE LOWER(name) LIKE ${"%" + query.toLowerCase() + "%"}
       ORDER BY name ASC
       OFFSET ${offset}
       LIMIT ${limit}
+    `;
+  }
+
+  if (limit === null) {
+    return await sql`
+      SELECT * FROM products
+      ORDER BY name ASC
+      OFFSET ${offset}
     `;
   }
 

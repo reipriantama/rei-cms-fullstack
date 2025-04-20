@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Card, CardHeader, CardContent } from "@/app/ui/components/card";
+import { formatCurrency } from "@/app/lib/utils";
 
 type Product = {
   id: string;
@@ -28,7 +29,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <h3 className="text-lg font-semibold">{product.name}</h3>
         <p className="text-sm text-muted-foreground">Stok: {product.stock}</p>
         <p className="text-sm font-medium text-blue-600">
-          Rp {product.price.toLocaleString()}
+          {formatCurrency(product.price)}
         </p>
       </CardContent>
     </Card>
