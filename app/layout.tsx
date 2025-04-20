@@ -1,6 +1,14 @@
-import '@/app/ui/global.css';
-import { inter } from '@/app/ui/fonts';
- 
+import "@/app/ui/global.css";
+import { inter } from "@/app/ui/fonts";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: {
+    template: "%s | Storka",
+    default: "Storka",
+  },
+};
+
 export default function RootLayout({
   children,
 }: {
