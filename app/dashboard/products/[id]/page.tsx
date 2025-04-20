@@ -12,9 +12,10 @@ import Link from "next/link";
 export default async function EditProductPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const product = await getProductById(params.id);
+  const { id } = await params;
+  const product = await getProductById(id);
 
   return (
     <div className="w-full p-6 mx-auto">

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import NavLinks from "@/app/ui/dashboard/nav-links";
-import StorkaLogo from "@/app/ui/acme-logo";
+import StorkaLogo from "@/app/ui/storkaLogo";
 import { signOut } from "@/auth";
 import { LogOutIcon } from "lucide-react";
 

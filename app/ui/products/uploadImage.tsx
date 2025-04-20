@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { uploadImageToCloudinary } from "@/app/lib/utils";
 import { Input } from "@/app/ui/components/input";
-import { Label } from "@/app/ui/components/label";
+import Image from "next/image";
 
 export default function CloudinaryUpload({
   defaultImage,
@@ -48,7 +48,9 @@ export default function CloudinaryUpload({
       )}
 
       {!isUploading && imageUrl && (
-        <img
+        <Image
+          width={40}
+          height={32}
           src={imageUrl}
           alt="Preview"
           className="w-40 h-32 object-cover border rounded"

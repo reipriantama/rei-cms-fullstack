@@ -39,7 +39,7 @@ export async function uploadImageToCloudinary(
 ): Promise<string | null> {
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", "cms_upload"); // preset kamu
+  formData.append("upload_preset", "cms_upload"); 
   formData.append("folder", "products");
 
   try {

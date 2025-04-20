@@ -72,7 +72,7 @@ async function seedProducts() {
 
 export async function GET() {
   try {
-    await sql.begin(async (sql) => {
+    await sql.begin(async () => {
       await seedUsers();
       await seedProducts();
     });

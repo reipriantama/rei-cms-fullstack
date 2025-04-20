@@ -7,15 +7,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="w-full flex-none md:w-64">
         <SideNav />
       </div>
-
-      {/* Konten utama */}
       <div className="flex-grow flex flex-col md:overflow-y-auto">
-        {/* Header */}
         <div className="px-3 py-4">
           <DashboardHeader />
         </div>
-
-        {/* Konten children */}
         <main className="flex-grow p-2">{children}</main>
       </div>
     </div>

@@ -12,15 +12,16 @@ import {
 import Pagination from "@/app/ui/pagination";
 import { DeleteProduct, EditProduct } from "@/app/ui/products/buttonProduct";
 import Search from "@/app/ui/search";
+import Image from "next/image";
 import Link from "next/link";
 
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: { query?: string; page?: string };
+  searchParams?: Promise<{ query?: string; page?: string }>;
 }) {
-  const query = searchParams?.query || "";
-  const currentPage = Number(searchParams?.page || "1");
+  const { query = "" } = (await searchParams) || {};
+  const currentPage = Number((await searchParams)?.page || "1");
 
   const ITEMS_PER_PAGE = 5;
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -57,7 +58,9 @@ export default async function Page({
                 <TableCell>{formatCurrency(product.price)}</TableCell>
                 <TableCell>{product.stock}</TableCell>
                 <TableCell>
-                  <img
+                  <Image
+                    width={80}
+                    height={80}
                     src={product.image_url}
                     alt={product.name}
                     className="h-12 w-20 object-cover rounded border"

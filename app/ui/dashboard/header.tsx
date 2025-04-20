@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 
-// Deteksi UUID atau ID string panjang
 function isIdSegment(segment: string) {
   return (
     /^[0-9a-f]{8}-[0-9a-f]{4}/.test(segment) ||
