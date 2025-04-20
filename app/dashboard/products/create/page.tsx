@@ -2,6 +2,12 @@ import { createProduct } from "@/app/lib/actions";
 import CloudinaryUpload from "@/app/ui/products/uploadImage";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 
+import { Input } from "@/app/ui/components/input";
+import { Textarea } from "@/app/ui/components/textArea";
+import { Button } from "@/app/ui/components/button";
+import { Label } from "@/app/ui/components/label";
+import Link from "next/link";
+
 export default function AddProductPage() {
   return (
     <div className="w-full p-6 mx-auto">
@@ -15,42 +21,58 @@ export default function AddProductPage() {
           },
         ]}
       />
-      <h1 className="text-2xl font-semibold mb-4">Tambah Produk</h1>
+      <h1 className="text-2xl font-semibold mb-4">Add New Product</h1>
 
       <form action={createProduct} className="space-y-4">
-        <input
-          type="text"
-          name="name"
-          placeholder="Nama Produk"
-          className="w-full border p-2 rounded"
-          required
-        />
-        <textarea
-          name="description"
-          placeholder="Deskripsi"
-          className="w-full border p-2 rounded"
-        />
-        <input
-          type="number"
-          name="price"
-          placeholder="Harga"
-          className="w-full border p-2 rounded"
-          required
-        />
-        <input
-          type="number"
-          name="stock"
-          placeholder="Stok"
-          className="w-full border p-2 rounded"
-          required
-        />
-        <CloudinaryUpload />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Simpan
-        </button>
+        <div className="space-y-1">
+          <Label htmlFor="name">Product Name</Label>
+          <Input id="name" name="name" placeholder="Product Name" required />
+        </div>
+
+        <div className="space-y-1">
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            id="description"
+            name="description"
+            placeholder="Product description"
+          />
+        </div>
+
+        <div className="space-y-1">
+          <Label htmlFor="price">Price</Label>
+          <Input
+            id="price"
+            type="number"
+            name="price"
+            placeholder="Price"
+            required
+          />
+        </div>
+
+        <div className="space-y-1">
+          <Label htmlFor="stock">Stock</Label>
+          <Input
+            id="stock"
+            type="number"
+            name="stock"
+            placeholder="Available stock"
+            required
+          />
+        </div>
+
+        <div className="space-y-1">
+          <Label htmlFor="image_url">Product Image</Label>
+          <CloudinaryUpload />
+        </div>
+
+        <div className="flex gap-2">
+          <Link href="/dashboard/products">
+            <Button type="button" variant="outline">
+              Cancel
+            </Button>
+          </Link>
+          <Button type="submit">Save</Button>
+        </div>
       </form>
     </div>
   );

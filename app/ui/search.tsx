@@ -4,6 +4,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { Input } from "@/app/ui/components/input";
 
 export default function Search({ placeholder }: { placeholder: string }) {
   const searchParams = useSearchParams();
@@ -38,23 +39,20 @@ export default function Search({ placeholder }: { placeholder: string }) {
   };
 
   return (
-    <div className="relative flex ">
-      <label htmlFor="search" className="sr-only">
-        Search
-      </label>
-      <input
+    <div className="relative w-full max-w-sm">
+      <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      <Input
         id="search"
-        className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 pr-10 text-sm outline-2 placeholder:text-gray-500"
         placeholder={placeholder}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
+        className="pl-10 pr-8"
       />
-      <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
       {search && (
         <button
           type="button"
           onClick={handleClear}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-red-500"
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-red-500"
         >
           <XMarkIcon className="h-4 w-4" />
         </button>

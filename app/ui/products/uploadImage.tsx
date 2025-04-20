@@ -1,37 +1,60 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { uploadImageToCloudinary } from "@/app/lib/utils";
+import { Input } from "@/app/ui/components/input";
+import { Label } from "@/app/ui/components/label";
 
-export default function CloudinaryUpload() {
-  const imageRef = useRef<HTMLImageElement>(null);
+export default function CloudinaryUpload({
+  defaultImage,
+}: {
+  defaultImage?: string;
+}) {
   const hiddenInputRef = useRef<HTMLInputElement>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(defaultImage || null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const imageUrl = await uploadImageToCloudinary(file);
+    setIsUploading(true);
 
-    if (imageUrl) {
-      if (imageRef.current) imageRef.current.src = imageUrl;
-      if (hiddenInputRef.current) hiddenInputRef.current.value = imageUrl;
+    try {
+      const uploadedUrl = await uploadImageToCloudinary(file);
+      if (uploadedUrl) {
+        setImageUrl(uploadedUrl);
+        if (hiddenInputRef.current) {
+          hiddenInputRef.current.value = uploadedUrl;
+        }
+      }
+    } finally {
+      setIsUploading(false);
     }
   };
 
   return (
     <div className="space-y-2">
-      <input
+      <Input
+        id="image-upload"
         type="file"
         accept="image/*"
         onChange={handleChange}
-        className="file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+        disabled={isUploading}
       />
-      <img
-        ref={imageRef}
-        alt="Preview"
-        className="w-40 h-32 object-cover border rounded"
-      />
+
+      {isUploading && (
+        <p className="text-sm text-muted-foreground">Uploading...</p>
+      )}
+
+      {!isUploading && imageUrl && (
+        <img
+          src={imageUrl}
+          alt="Preview"
+          className="w-40 h-32 object-cover border rounded"
+        />
+      )}
+
       <input ref={hiddenInputRef} type="hidden" name="image_url" />
     </div>
   );
