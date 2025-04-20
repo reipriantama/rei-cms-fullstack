@@ -1,3 +1,4 @@
+import { formatCurrency } from "@/app/lib/utils";
 import { getAllProducts, getProductCount } from "@/app/query/products";
 import { Button } from "@/app/ui/components/button";
 import {
@@ -53,7 +54,7 @@ export default async function Page({
             {products.map((product) => (
               <TableRow key={product.id}>
                 <TableCell className="font-medium">{product.name}</TableCell>
-                <TableCell>Rp {product.price.toLocaleString()}</TableCell>
+                <TableCell>{formatCurrency(product.price)}</TableCell>
                 <TableCell>{product.stock}</TableCell>
                 <TableCell>
                   <img
