@@ -173,15 +173,20 @@ export async function createProduct(formData: FormData): Promise<void> {
   try {
     await sql`
       INSERT INTO products (name, description, price, stock, image_url)
-      VALUES (${name}, ${description || null}, ${price}, ${stock}, ${
-      image_url || null
-    })
+      VALUES (
+        ${name},
+        ${description || null},
+        ${price},
+        ${stock},
+        ${image_url || null}
+      )
     `;
   } catch (error) {
     console.error("Database error:", error);
     return;
   }
 
+  // Revalidate cache dan redirect
   revalidatePath("/dashboard/products");
   redirect("/dashboard/products");
 }

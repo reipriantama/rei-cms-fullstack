@@ -42,3 +42,34 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
     totalPages,
   ];
 };
+
+export async function uploadImageToCloudinary(
+  file: File
+): Promise<string | null> {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "cms_upload"); // preset kamu
+  formData.append("folder", "products");
+
+  try {
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/dunu43aqj/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.secure_url) {
+      return data.secure_url;
+    } else {
+      console.error("Upload failed:", data);
+      return null;
+    }
+  } catch (error) {
+    console.error("Upload error:", error);
+    return null;
+  }
+}

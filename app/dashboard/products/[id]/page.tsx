@@ -1,6 +1,7 @@
 import { getProductById } from "@/app/query/products";
 import { updateProduct } from "@/app/lib/actions";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
+import CloudinaryUpload from "@/app/ui/products/uploadImage";
 
 export default async function EditProductPage({
   params,
@@ -53,12 +54,7 @@ export default async function EditProductPage({
           className="w-full border p-2 rounded"
           required
         />
-        <input
-          defaultValue={product.image_url}
-          name="image_url"
-          placeholder="URL Gambar"
-          className="w-full border p-2 rounded"
-        />
+        <CloudinaryUpload />
         <button
           type="submit"
           className="bg-blue-600 text-white px-4 py-2 rounded"
