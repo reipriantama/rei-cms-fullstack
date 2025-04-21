@@ -1,5 +1,4 @@
 import { getProductById } from "@/app/query/products";
-import { updateProduct } from "@/app/lib/actions";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import CloudinaryUpload from "@/app/ui/products/uploadImage";
 
@@ -8,6 +7,7 @@ import { Textarea } from "@/app/ui/components/textArea";
 import { Button } from "@/app/ui/components/button";
 import { Label } from "@/app/ui/components/label";
 import Link from "next/link";
+import { updateProduct } from "@/app/lib/actions";
 
 export default async function EditProductPage({
   params,
@@ -31,9 +31,15 @@ export default async function EditProductPage({
       />
       <h1 className="text-2xl font-semibold mb-4">Edit Product</h1>
 
+      {/* Form untuk edit produk */}
       <form action={updateProduct} className="space-y-4">
         <input type="hidden" name="id" value={product.id} />
-
+        <input
+          type="hidden"
+          name="image_url_old"
+          value={product.image_url}
+        />{" "}
+        {/* Menyertakan gambar lama */}
         <div className="space-y-1">
           <Label htmlFor="name">Product Name</Label>
           <Input
@@ -44,7 +50,6 @@ export default async function EditProductPage({
             required
           />
         </div>
-
         <div className="space-y-1">
           <Label htmlFor="description">Description</Label>
           <Textarea
@@ -54,7 +59,6 @@ export default async function EditProductPage({
             placeholder="Product description"
           />
         </div>
-
         <div className="space-y-1">
           <Label htmlFor="price">Price</Label>
           <Input
@@ -66,7 +70,6 @@ export default async function EditProductPage({
             required
           />
         </div>
-
         <div className="space-y-1">
           <Label htmlFor="stock">Stock</Label>
           <Input
@@ -78,12 +81,10 @@ export default async function EditProductPage({
             required
           />
         </div>
-
         <div className="space-y-1">
           <Label htmlFor="image_url">Product Image</Label>
           <CloudinaryUpload defaultImage={product.image_url} />
         </div>
-
         <div className="flex gap-2">
           <Button type="submit">Save Changes</Button>
           <Link href="/dashboard/products">

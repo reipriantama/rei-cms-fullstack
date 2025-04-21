@@ -40,7 +40,7 @@ export default async function Page({
   return (
     <div>
       <div className="w-full flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">Daftar Produk</h2>
+        <h2 className="text-lg font-semibold">List Produk</h2>
         <Button asChild variant="default" size="sm">
           <Link href="/dashboard/products/create">Add Product +</Link>
         </Button>
