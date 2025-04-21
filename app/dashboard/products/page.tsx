@@ -24,12 +24,10 @@ export default async function Page({
   const ITEMS_PER_PAGE = 5;
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
-  // Fetch data from API
   const fetchedProducts = await getAllProducts(query, offset, ITEMS_PER_PAGE);
 
-  // Map the data to the correct structure
   const products: Product[] = fetchedProducts.map((product) => ({
-    id: product.id, // Map fields accordingly
+    id: product.id,
     name: product.name,
     price: product.price,
     stock: product.stock,
