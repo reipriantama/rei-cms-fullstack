@@ -45,7 +45,7 @@ export default function ProductTable({ products }: ProductTableProps) {
                 <Image
                   width={80}
                   height={80}
-                  src={product.image_url}
+                  src={product.image_url || "/placeholder.png"}
                   alt={product.name}
                   className="h-12 w-20 object-cover rounded border"
                 />
