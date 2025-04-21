@@ -89,7 +89,7 @@ export async function createProduct(formData: FormData): Promise<void> {
   redirect("/dashboard/products");
 }
 
-export async function updateProduct(formData: FormData): Promise<void> {
+export async function updateProduct(formData: FormData) {
   const id = formData.get("id") as string;
 
   const validatedFields = CreateProductSchema.safeParse({
@@ -97,7 +97,7 @@ export async function updateProduct(formData: FormData): Promise<void> {
     description: formData.get("description"),
     price: formData.get("price"),
     stock: formData.get("stock"),
-    image_url: formData.get("image_url"),
+    image_url: formData.get("image_url")?.toString(),
   });
 
   if (!validatedFields.success) {
@@ -110,6 +110,8 @@ export async function updateProduct(formData: FormData): Promise<void> {
 
   const { name, description, price, stock, image_url } = validatedFields.data;
 
+  const finalImageUrl = (image_url || formData.get("image_url_old") || "").toString();
+
   try {
     await sql`
       UPDATE products
@@ -117,7 +119,7 @@ export async function updateProduct(formData: FormData): Promise<void> {
           description = ${description || null},
           price = ${price},
           stock = ${stock},
-          image_url = ${image_url || null}
+          image_url = ${finalImageUrl || null}
       WHERE id = ${id}
     `;
   } catch (error) {

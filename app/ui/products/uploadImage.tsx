@@ -51,11 +51,13 @@ export default function CloudinaryUpload({
         <Image
           width={40}
           height={32}
-          src={imageUrl}
+          src={imageUrl || "/placeholder.png"}
           alt="Preview"
           className="w-40 h-32 object-cover border rounded"
         />
       )}
+
+      {!imageUrl && !isUploading && <p>No image uploaded</p>}
 
       <input ref={hiddenInputRef} type="hidden" name="image_url" />
     </div>
