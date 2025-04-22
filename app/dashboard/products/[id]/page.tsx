@@ -31,15 +31,13 @@ export default async function EditProductPage({
       />
       <h1 className="text-2xl font-semibold mb-4">Edit Product</h1>
 
-      {/* Form untuk edit produk */}
       <form action={updateProduct} className="space-y-4">
         <input type="hidden" name="id" value={product.id} />
         <input
           type="hidden"
           name="image_url_old"
           value={product.image_url}
-        />{" "}
-        {/* Menyertakan gambar lama */}
+        />
         <div className="space-y-1">
           <Label htmlFor="name">Product Name</Label>
           <Input

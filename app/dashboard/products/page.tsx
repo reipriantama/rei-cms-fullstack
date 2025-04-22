@@ -45,7 +45,7 @@ export default async function Page({
           <Link href="/dashboard/products/create">Add Product +</Link>
         </Button>
         <div>
-          <Search placeholder="Cari nama produk..." />
+          <Search placeholder="Search products" />
         </div>
       </div>
       <ProductTable products={products} />
